@@ -120,3 +120,23 @@ test('every URL in the sitemap and the feed points at a built page', () => {
 		assert.ok(existsSync(`${build}${path}.html`), `${url} is listed but ${build}${path}.html does not exist`);
 	}
 });
+
+test('no HTML comments reach the served pages', () => {
+	for (const f of [...pages(), `${build}/404.html`]) {
+		const hit = read(f).match(/<!--[\s\S]{0,40}/);
+		assert.equal(hit, null, `${f} contains an HTML comment: ${hit?.[0]}`);
+	}
+});
+
+test('no chart value label is clipped by the edge of its SVG', () => {
+	const charWidth = 8;
+	for (const svg of read(`${build}/experiments.html`).match(/<svg[\s\S]*?<\/svg>/g) ?? []) {
+		const width = Number(svg.match(/viewBox="0 0 ([\d.]+) /)[1]);
+		for (const [, x, inner] of svg.matchAll(/<text class="value[^"]*" x="([\d.]+)"[^>]*>([\s\S]*?)<\/text>/g)) {
+			const text = inner.replace(/<[^>]+>/g, '').trim();
+			const gap = inner.includes('dx="') ? 7 : 0;
+			const right = Number(x) + text.length * charWidth + gap;
+			assert.ok(right <= width, `"${text}" ends at ${Math.round(right)} but the SVG is ${width} wide`);
+		}
+	}
+});

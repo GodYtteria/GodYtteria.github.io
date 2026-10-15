@@ -5,7 +5,7 @@
 
 	const rowH = 34;
 	const gap = 10;
-	const valueW = 76;
+	const valueW = 120;
 	const plotW = 520;
 	const labelW = $derived(
 		Math.min(360, Math.max(200, 8 * Math.max(...chart.bars.map((b) => b.label.length)) + 24))

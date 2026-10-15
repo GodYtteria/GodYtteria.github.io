@@ -1,4 +1,4 @@
-import { existsSync, globSync, readFileSync, rmSync } from 'node:fs';
+import { existsSync, globSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 const build = 'build';
@@ -26,4 +26,14 @@ for (const dir of dirs) {
 	}
 }
 
-console.log(`pruned ${removed} unused client JS files from ${build}`);
+let stripped = 0;
+for (const f of html) {
+	const before = readFileSync(f, 'utf8');
+	const after = before.replace(/<!--[\s\S]*?-->/g, '');
+	if (after !== before) {
+		writeFileSync(f, after);
+		stripped++;
+	}
+}
+
+console.log(`pruned ${removed} unused client JS files and the hydration comments in ${stripped} pages from ${build}`);
