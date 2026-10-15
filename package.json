@@ -1,0 +1,27 @@
+{
+  "name": "godytteria-site",
+  "version": "0.1.0",
+  "scripts": {
+    "dev": "vite dev",
+    "build": "vite build && node scripts/prune-client-js.mjs",
+    "preview": "vite preview",
+    "check": "node scripts/check-npmrc.mjs && svelte-kit sync && svelte-check --tsconfig ./tsconfig.json"
+  },
+  "type": "module",
+  "private": true,
+  "devDependencies": {
+    "@sveltejs/adapter-static": "4.0.0",
+    "@sveltejs/kit": "3.1.0",
+    "@sveltejs/vite-plugin-svelte": "7.3.1",
+    "@types/node": "26.6.5",
+    "mdsvex": "0.12.8",
+    "svelte": "5.57.2",
+    "svelte-check": "4.7.6",
+    "typescript": "6.0.3",
+    "vite": "8.3.4"
+  },
+  "imports": {
+    "#lib/*.svelte": "./src/lib/*.svelte",
+    "#lib/*": "./src/lib/*.ts"
+  }
+}
